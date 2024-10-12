@@ -1,20 +1,82 @@
-from fastapi import FastAPI, Body, UploadFile
+from fastapi import FastAPI, Body, UploadFile, Query, File, Depends, HTTPException
 from fastapi.responses import FileResponse
-from typing import Annotated
+from typing import Annotated, Optional, Union
+from pydantic import BaseModel
+from shemas import DataIn, Defect, ImageInfo
+import json
+import base64
+from PIL import Image
+from io import BytesIO
+from db import Base, engine, get_db
+import crud
+from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy.orm import Session
 
 
 app = FastAPI()
 
+Base.metadata.create_all(bind=engine)
 
-@app.post("/upload_file", response_class=FileResponse)
-async def upload_file(files: list[UploadFile]):
+origins = ["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+
+
+
+@app.post("/upload_file")
+async def upload_file(data: DataIn = Depends(), images: list[UploadFile] = File(...), db: Session = Depends(get_db)):
+    if any([ image.content_type != "image/png" for image in images]):
+        raise HTTPException(400, detail="Invalid document type")
+
+    result = []
+
+    if not crud.get_user(db, data.cookies): 
+        user = crud.create_user(db, data.cookies)
+    if not crud.get_computer(db, data.unique_id):
+       computer = crud.create_computer(db, data)
+
+    print(crud.get_comp_def(db, "2"))
+
+    for image in images:
+        image_data = await image.read()
+        code_image = base64.b64encode(image_data).decode('utf-8') 
+        defect = Defect(lock=True)
+        cur_img_res = ImageInfo(code=code_image, defect=defect)
+
+        result.append(cur_img_res)
+
+
+    return result 
+
+@app.post("/confirm")
+async def confirm(cookies: str, unique_id: str, imagesInfo: list[ImageInfo], db: Session = Depends(get_db)):
+    if not crud.get_computer(db, unique_id):
+        raise HTTPException(400, "Invalid unique_id")
+    for image in imagesInfo:
+        for key, value in image.defect:
+            if value:
+               crud.create_comp_def(db, unique_id, key) 
+        
+    res = crud.get_stats(db, unique_id).all()
+    out = {}
+    out.update({"unique_id": unique_id})
+    for key, value in res:
+        out.update({key: value})
+                
+    return  out
+
+
+@app.post("/rofl")
+async def rofl():
     
-    for file in files:
-
-        data = await file.read()
-        with open(f"images/{file.filename}1.png", "wb") as file_new:
-            file_new.write(data)
-
-    return f"images/{files[0].filename}1.png"
+    return True
 
 

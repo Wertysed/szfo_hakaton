@@ -1,0 +1,19 @@
+version: "3.7"
+
+services:
+   db:
+     image: postgres:15
+     container_name: db_szfo
+     env_file:
+       - config.env
+    
+   app:
+    build:
+      context: .
+    env_file:
+      - config.env
+    container_name: fastapi_back_szfo
+    ports:
+      - 9999:8000
+    depends_on:
+      - db
