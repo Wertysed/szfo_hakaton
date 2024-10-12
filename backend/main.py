@@ -47,7 +47,7 @@ async def upload_file(data: DataIn = Depends(), images: list[UploadFile] = File(
 
     for image in images:
         image_data = await image.read()
-        code_image = base64.b64encode(image_data).decode('utf-8') 
+        code_image ="data:image/png;base64,"+ base64.b64encode(image_data).decode('utf-8') 
         defect = Defect(lock=True)
         cur_img_res = ImageInfo(code=code_image, defect=defect)
 
