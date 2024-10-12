@@ -74,7 +74,7 @@ async def confirm(cookies: str, unique_id: str, imagesInfo: list[ImageInfo], db:
     return  out
 
 
-@app.post("/rofl")
+@app.get("/rofl")
 async def rofl():
     
     return True
