@@ -43,12 +43,12 @@ async def upload_file(data: DataIn = Depends(), images: list[UploadFile] = File(
     if not crud.get_computer(db, data.unique_id):
        computer = crud.create_computer(db, data)
 
-    print(crud.get_comp_def(db, "2"))
 
     for image in images:
         image_data = await image.read()
         code_image ="data:image/png;base64,"+ base64.b64encode(image_data).decode('utf-8') 
-        defect = Defect(lock=[1])
+        defect = Defect(lock=[1], scrathes=[2,3], chips=[4,5])
+        
         cur_img_res = ImageInfo(code=code_image, defect=defect)
 
         result.append(cur_img_res)
@@ -62,15 +62,19 @@ async def confirm(cookies: str, unique_id: str, imagesInfo: list[ImageInfo], db:
         raise HTTPException(400, "Invalid unique_id")
     for image in imagesInfo:
         for key, value in image.defect:
-            if value:
-               crud.create_comp_def(db, unique_id, key) 
-        
-    res = crud.get_stats(db, unique_id).all()
+            for i in value: 
+                if i:
+                    crud.create_comp_def(db, unique_id, key)
+    
     out = {}
     out.update({"unique_id": unique_id})
-    for key, value in res:
-        out.update({key: value})
-                
+    res = crud.get_stats(db, unique_id).all()
+    if not res:
+        out.update({"status": "quality control passed"}) 
+    else:
+        out.update({"status": "quality control failed"})
+        for key, value in res:
+            out.update({key: value})
     return  out
 
 
