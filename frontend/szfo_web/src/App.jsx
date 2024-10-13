@@ -17,7 +17,7 @@ function App() {
   const bodyFormData = new FormData();
   const [servAnsw, setServAnsw] = React.useState([]);
   const instance = axios.create({
-    baseURL: 'http://89.111.175.58:9999/',
+    baseURL: '/api/',
     timeout: 1000,
   });
 
@@ -35,7 +35,7 @@ function App() {
       "cookies": localStorage.getItem("userId"),
       "unique_id": id
     }
-    instance.post("http://89.111.175.58:9999/upload_file", bodyFormData, {
+    axios.post("/api/upload_file", bodyFormData, {
       params: headersSendVideos,
       headers: {
         "Content-Type": "multipart/form-data",
@@ -91,7 +91,7 @@ function App() {
         }
     let id = document.getElementById("laptopId").value
     console.log(req)
-    instance.post("http://89.111.175.58:9999/confirm", req, {
+    axios.post("/api/confirm", req, {
       params: {
         "cookies": localStorage.getItem("userId"),
         "unique_id": id
