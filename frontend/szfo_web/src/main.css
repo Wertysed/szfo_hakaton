@@ -1,0 +1,124 @@
+.hide {
+    display: none;
+    width: 30%;
+    height: 100px;
+}
+
+.fileUpload {
+    font-family: 'Arial';
+    margin-right: auto;
+    font-size: large;
+    margin-left: auto;
+    margin-top: 40px;
+    margin-bottom: 40px;
+    border: 3px dashed;
+    border-color: #7B68EE;
+    box-shadow: 1px 1px 15px #7c68ee79;
+    border-radius: 20px;
+    width: 80%;
+    height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.uploadInside {
+    justify-content: center;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.btnUpload {
+    text-align: center;
+    font-size: large;
+    width: 40%;
+    background-color: #7B68EE;
+    height: 50px;
+    color: white;
+    border: 0px;
+    margin: 0 auto;
+    display: block;
+    margin: 0 auto;
+    margin-top: 40px;
+}
+
+.inputLabel {
+    font-family: Arial;
+    font-size: larger;
+}
+
+.inputText {
+    border-left: 0px;
+    border-right: 0px;
+    border-top: 0px;
+    border-bottom: solid;
+    font-family: Arial;
+    font-size: large;
+    width: 40%;
+}
+
+.inputText:focus {
+    outline: none;
+}
+
+.laptopImages {
+    width: 80%;
+    text-align: center;
+    margin-top: "40px";
+    font-family: Arial;
+    font-size: large;
+    box-shadow: 1px 1px 10px grey;
+    padding: 30px 30px 30px 30px;
+    border-radius: 10px;
+    margin-bottom: 10%;
+    padding-bottom: 5%;
+}
+
+.selector {
+    margin-left: "auto";
+    margin-right: "auto";
+    background-color: #7B68EE;
+    color: white;
+    font-family: Arial;
+    font-size: medium;
+    outline: none;
+    border: none;
+    height: 50px;
+    width: 80%;
+
+}
+
+
+select::-ms-expand {
+    display: none;
+}
+
+.laptops {
+    display: grid;
+    grid-template-columns: 30% 30% 30%;
+    margin-left: 10%;
+}
+
+.crop-container {
+    height: 10vw;
+    max-width: 90%;
+    overflow: hidden;
+}
+.crop-container img {
+    margin: -200px 0 0 -100px;
+}
+
+.defects {
+    margin-bottom: 1px;
+    background-color: #7B68EE;
+    color: white;
+    margin:5px;
+    padding: 1% 3% 1% 3%;
+    border-radius: 5px;
+    word-break: keep-all;
+    display: inline-block;
+}
+
+.center {
+
+}
