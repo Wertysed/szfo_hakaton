@@ -15,10 +15,10 @@ function App() {
   const [images, setImages] = React.useState([])
   const [lenDef, setLenDef] = React.useState();
   const bodyFormData = new FormData();
-  const [servAnsw, setServAnsw] = React.useState();
+  const [servAnsw, setServAnsw] = React.useState([]);
   const instance = axios.create({
     baseURL: 'http://89.111.175.58:9999/',
-    timeout: 1,
+    timeout: 1000,
   });
 
 
@@ -35,7 +35,7 @@ function App() {
       "cookies": localStorage.getItem("userId"),
       "unique_id": id
     }
-    axios.post("http://89.111.175.58:9999/upload_file", bodyFormData, {
+    instance.post("http://89.111.175.58:9999/upload_file", bodyFormData, {
       params: headersSendVideos,
       headers: {
         "Content-Type": "multipart/form-data",
@@ -91,15 +91,15 @@ function App() {
         }
     let id = document.getElementById("laptopId").value
     console.log(req)
-    axios.post("http://89.111.175.58:9999/confirm", req, {
+    instance.post("http://89.111.175.58:9999/confirm", req, {
       params: {
         "cookies": localStorage.getItem("userId"),
         "unique_id": id
       }
     })
     .then((response) => {
-      if (response.data.status === "quality control passed") {setServAnsw("Контроль пройден")}
-      else {setServAnsw("Контроль не пройден")
+      if (response.data.status === "quality control passed") {setServAnsw({status: "Контроль пройден"})}
+      else {setServAnsw(response.data)
       }
     })
   }
@@ -222,8 +222,14 @@ function App() {
         if (images.length > 0) {
           return (
             <div className="center" style={{marginBottom: "100px"}}>
-              <button className="btnUpload" onClick={() => sendConfirm()}>Отправить</button>
-              <p className="inputLabel" style={{textAlign: "center"}}>{servAnsw}</p>
+              <button className="btnUpload" onClick={() => sendConfirm()}>Отправить</button>   
+              <p className="inputLabel" style={{textAlign: "center"}}>{servAnsw.status}</p>
+              <p className="inputLabel" style={{textAlign: "center"}}>{servAnsw.lock != undefined ? "Плохо закручен винт:" + servAnsw.lock : ""}</p>
+              <p className="inputLabel" style={{textAlign: "center"}}>{servAnsw.scrathes != undefined ? "Царапины:" + servAnsw.scrathes:""}</p>
+              <p className="inputLabel" style={{textAlign: "center"}}>{servAnsw.broken_pixels != undefined? "Битые пиксели:" + servAnsw.broken_pixels:""}</p>
+              <p className="inputLabel" style={{textAlign: "center"}}>{servAnsw.no_screws ? "Нет винта:" + servAnsw.no_screws:""}</p>
+              <p className="inputLabel" style={{textAlign: "center"}}>{servAnsw.problems_keys ? "Сломана клавиша:" + servAnsw.problems_keys:""}</p>
+              <p className="inputLabel" style={{textAlign: "center"}}>{servAnsw.chips ? "Сколы:" + servAnsw.chips:""}</p>
             </div>
           )
         } 
